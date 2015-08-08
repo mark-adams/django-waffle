@@ -67,7 +67,7 @@ WAFFLE_SAMPLE_DEFAULT = False
 WAFFLE_OVERRIDE = False
 WAFFLE_CACHE_PREFIX = 'test:'
 
-if django.VERSION < (1, 7):
+if django.get_version() < '1.7.0':
     INSTALLED_APPS += ('south', )
 
     SOUTH_MIGRATION_MODULES = {

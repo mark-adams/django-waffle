@@ -1,22 +1,23 @@
 language: python
 sudo: false
-python:
- - "2.6"
- - "2.7"
- - "3.3"
- - "3.4"
 env:
- - DJANGO_VERSION=1.4
- - DJANGO_VERSION=1.6
- - DJANGO_VERSION=1.7
+  # All currently supported versions of Django / Python
+  # except Python 3.2 (since Jinja doesn't support it)
+  # https://docs.djangoproject.com/en/dev/faq/install/#what-python-version-can-i-use-with-django
+
+  - TOXENV=py25-dj1.4
+  - TOXENV=py26-dj1.4
+  - TOXENV=py27-dj1.4
+
+  - TOXENV=py27-dj1.7
+  - TOXENV=py33-dj1.7
+  - TOXENV=py34-dj1.7
+
+  - TOXENV=py27-dj1.8
+  - TOXENV=py33-dj1.8
+  - TOXENV=py34-dj1.8
+
 install:
- - pip install -q "Django>=${DJANGO_VERSION},<${DJANGO_VERSION}.99" -r travis.txt
-script: ./run.sh test
-matrix:
-  exclude:
-    - python: "2.6"
-      env: DJANGO_VERSION=1.7
-    - python: "3.3"
-      env: DJANGO_VERSION=1.4
-    - python: "3.4"
-      env: DJANGO_VERSION=1.4
+  - pip install tox
+script:
+  - tox -v -- -v

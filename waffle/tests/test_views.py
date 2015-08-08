@@ -1,16 +1,20 @@
+from unittest import skipIf
+
 from django.core.urlresolvers import reverse
 
 from waffle.models import Flag, Sample, Switch
-from waffle.tests.base import TestCase
+from waffle.tests.base import TestCase, IS_DJANGO_18
 
 
 class WaffleViewTests(TestCase):
+    @skipIf(IS_DJANGO_18, 'Jingo does not support Django 1.8')
     def test_wafflejs(self):
         response = self.client.get(reverse('wafflejs'))
         self.assertEqual(200, response.status_code)
         self.assertEqual('application/x-javascript', response['content-type'])
         self.assertEqual('max-age=0', response['cache-control'])
 
+    @skipIf(IS_DJANGO_18, 'Jingo does not support Django 1.8')
     def test_flush_all_flags(self):
         """Test the 'FLAGS_ALL' list gets invalidated correctly."""
         Flag.objects.create(name='myflag1', everyone=True)
@@ -24,6 +28,7 @@ class WaffleViewTests(TestCase):
         self.assertEqual(200, response.status_code)
         assert ('myflag2', True) in response.context['flags']
 
+    @skipIf(IS_DJANGO_18, 'Jingo does not support Django 1.8')
     def test_flush_all_switches(self):
         """Test the 'SWITCHES_ALL' list gets invalidated correctly."""
         switch = Switch.objects.create(name='myswitch', active=True)
@@ -37,6 +42,7 @@ class WaffleViewTests(TestCase):
         self.assertEqual(200, response.status_code)
         assert ('myswitch', False) in response.context['switches']
 
+    @skipIf(IS_DJANGO_18, 'Jingo does not support Django 1.8')
     def test_flush_all_samples(self):
         """Test the 'SAMPLES_ALL' list gets invalidated correctly."""
         Sample.objects.create(name='sample1', percent='100.0')

@@ -1,3 +1,5 @@
+from unittest import skipIf
+
 from django import template
 from django.contrib.auth.models import AnonymousUser
 from django.template import Template
@@ -8,7 +10,7 @@ import mock
 
 from test_app import views
 from waffle.middleware import WaffleMiddleware
-from waffle.tests.base import TestCase
+from waffle.tests.base import TestCase, IS_DJANGO_18
 
 
 def get():
@@ -23,7 +25,7 @@ def process_request(request, view):
 
 
 class WaffleTemplateTests(TestCase):
-
+    @skipIf(IS_DJANGO_18, 'Jingo does not support Django 1.8')
     def test_django_tags(self):
         request = get()
         response = process_request(request, views.flag_in_django)
@@ -41,6 +43,7 @@ class WaffleTemplateTests(TestCase):
         children = test_template.nodelist.get_nodes_by_type(VariableNode)
         self.assertEqual(len(children), 2)
 
+    @skipIf(IS_DJANGO_18, 'Jingo does not support Django 1.8')
     def test_no_request_context(self):
         """Switches and Samples shouldn't require a request context."""
         request = get()
@@ -48,6 +51,7 @@ class WaffleTemplateTests(TestCase):
         assert 'switch off' in content
         assert 'sample' in content
 
+    @skipIf(IS_DJANGO_18, 'Jingo does not support Django 1.8')
     @override_settings(TEMPLATE_LOADERS=(
         'jingo.Loader',
         'django.template.loaders.filesystem.Loader',
